@@ -15,6 +15,7 @@ make
 // run
 ./main
 ```
-
+## References
+- https://www.geeksforgeeks.org/adjoint-inverse-matrix/
 ## Screenshot
 ![alt text](Resource/success.png)
