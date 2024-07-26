@@ -43,7 +43,7 @@ void getCofactor(const algebra::MATRIX<T>& A, algebra::MATRIX<T>& temp, std::siz
                 temp[i][j++] = A[row][col];
                 // Row is filled, so increase row index and
                 // reset col index
-                if (j == n - 1) {
+                if (j == N - 1) {
                     j = 0;
                     i++;
                 }
@@ -56,9 +56,8 @@ T determinant_rec(const algebra::MATRIX<T>& matrix, std::size_t N) {
     if (N == 1) {
         return matrix[0][0];
     }
-
     // cofactor matrix
-    algebra::MATRIX<T> cofactor(N-1, std::vector<T>(N-1, T(0)));
+    algebra::MATRIX<T> cofactor(N, std::vector<T>(N, T(0)));
 
     T det = T(0);
     T sign = T(1);

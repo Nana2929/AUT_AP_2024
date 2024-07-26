@@ -435,7 +435,8 @@ TEST(AutAp2024SpringHW1, determinant_DeterminantLargerMatrix) {
 
 	auto result = determinant(mat);
 	EXPECT_NEAR(result, expectedDet, 1e-6)
-		<< "Determinant calculation for a larger matrix failed.";
+		<< "Determinant calculation for a larger matrix failed. expected: "
+		<< expectedDet << " result: " << result;
 }
 
 // Test calculating the determinant of a non-square matrix throws error

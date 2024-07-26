@@ -106,7 +106,7 @@ std::optional<std::string> operation){
         if (rowsA != rowsB || colsA != colsB){
             throw std::invalid_argument("Matrix dimensions must match for addition or subtraction.");}
         if (operation != "sum" && operation != "sub"){
-            throw std::invalid_argument("Invalid operation. Choose either 'sum' or 'sub'.");
+            operation = "sum";
         }
         algebra::MATRIX<T> result(rowsA, std::vector<T>(colsA, 0));
         for (std::size_t i = 0; i< rowsA; i++){
@@ -125,7 +125,19 @@ std::optional<std::string> operation){
 template<typename T>
 algebra::MATRIX<T>algebra::multiply(const algebra::MATRIX<T>& matrix, const T scalar){
     std::size_t rows, cols;
-    rows = matrix.size(); cols = matrix[0].size();
+    rows = matrix.size();
+
+    if(rows == 0){
+        return {};
+    }
+
+    cols = matrix[0].size();
+
+    if (cols == 0)
+    {
+        return {};
+    }
+
     algebra::MATRIX<T> result(rows, std::vector<T>(cols, 0));
     for (std::size_t i = 0; i< rows; i++){
         for (std::size_t j = 0; j< cols; j++){
@@ -140,8 +152,16 @@ algebra::MATRIX<T> algebra::multiply(const algebra::MATRIX<T>& matrixA, const al
 
     std::size_t rowsA, colsA;
     std::size_t rowsB, colsB;
-    rowsA = matrixA.size(); colsA = matrixA[0].size();
-    rowsB = matrixB.size(); colsB = matrixB[0].size();
+    rowsA = matrixA.size();
+    rowsB = matrixB.size();
+
+    if(rowsA == 0 || rowsB == 0){
+        throw std::invalid_argument("Empty matrices cannot be multiplied.");
+    }
+
+    colsA = matrixA[0].size();
+    colsB = matrixB[0].size();
+
     if (colsA != rowsB) {
         throw std::invalid_argument("Matrix dimensions must match for multiplication.");
     }
@@ -163,9 +183,17 @@ algebra::MATRIX<T> algebra::hadamard_product(const algebra::MATRIX<T>& matrixA, 
     // ensure that the matrices have the same dimensions
     std::size_t rowsA, colsA;
     std::size_t rowsB, colsB;
-    rowsA = matrixA.size(); colsA = matrixA[0].size();
-    rowsB = matrixB.size(); colsB = matrixB[0].size();
-    if (rowsA != colsA || rowsB != colsB){
+    rowsA = matrixA.size();
+    rowsB = matrixB.size();
+
+    if(rowsA == 0 || rowsB == 0){
+        return {};
+    }
+
+    colsA = matrixA[0].size();
+    colsB = matrixB[0].size();
+
+    if (rowsA != rowsB || colsA != colsB){
         throw std::invalid_argument("Matrix dimensions must match for Hadamard product.");
     }
     algebra::MATRIX<T> result(rowsA, std::vector<T>(colsA, 0));
@@ -209,7 +237,7 @@ algebra::MATRIX<T> algebra::transpose(const algebra::MATRIX<T>& matrix){
 template <typename T>
 T algebra::trace(const algebra::MATRIX<T>& matrix){
     T t = T(0);
-    if (matrix.size() != matrix[0].size()){
+    if ( !matrix.size() ||  matrix.size() != matrix[0].size()){
         throw std::invalid_argument("Matrix must be square for trace calculation.");
     }
     for (std::size_t i = 0; i< matrix.size(); i++){
@@ -223,6 +251,9 @@ T algebra::trace(const algebra::MATRIX<T>& matrix){
 template <typename T>
 double algebra::determinant(const MATRIX<T>& matrix){
     std::size_t rows, cols;
+    if (matrix.empty()){
+        throw std::invalid_argument("Empty matrix does not have a determinant.");
+    }
     rows = matrix.size(); cols = matrix[0].size();
     if (rows != cols){
             throw std::invalid_argument("Matrix must be square for determinant calculation.");
