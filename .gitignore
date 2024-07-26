@@ -1,5 +1,10 @@
-# Prerequisites
-*.d
+# build 
+build
+# settings (env)
+*.vscode
+bash
+## Prerequisites
+*.ld
 
 # Compiled Object files
 *.slo
