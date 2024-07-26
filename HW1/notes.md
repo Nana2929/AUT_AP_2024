@@ -17,4 +17,4 @@ make
 ```
 
 ## Screenshot
-![alt text](Resources/success.png)
+![alt text](Resource/success.png)
