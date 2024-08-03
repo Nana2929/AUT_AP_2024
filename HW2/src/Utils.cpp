@@ -13,3 +13,4 @@ bool Utils::write_to_file(const std::string &file_name, const std::string &data)
     file.close();
     return true;
 }
+

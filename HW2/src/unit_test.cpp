@@ -175,140 +175,140 @@ TEST_F(PersonTest, Person_GetInfoFileOutput)
     std::remove(filename.c_str());
 }
 
-// // "============================================="
-// // "              Account Class Tests            "
-// // "============================================="
+// "============================================="
+// "              Account Class Tests            "
+// "============================================="
 
-// class AccountTest : public ::testing::Test {
-// protected:
-//     std::string personName = "John Doe";
-//     size_t personAge = 30;
-//     std::string personGender = "Male";
-//     std::string personFingerprint = "validFingerprint";
-//     size_t socioeconomicRank = 5;
-//     bool isAlive = true;
+class AccountTest : public ::testing::Test {
+protected:
+    std::string personName = "John Doe";
+    size_t personAge = 30;
+    std::string personGender = "Male";
+    std::string personFingerprint = "validFingerprint";
+    size_t socioeconomicRank = 5;
+    bool isAlive = true;
 
-//     std::string bankName = "Test Bank";
-//     std::string bankFingerprint = "bankFingerprint";
+    std::string bankName = "Test Bank";
+    std::string bankFingerprint = "bankFingerprint";
 
-//     std::string accountPassword = "password123";
+    std::string accountPassword = "password123";
 
-//     Person* person;
-//     Bank* bank;
+    Person* person;
+    Bank* bank;
 
-//     void SetUp() override {
-//         person = new Person(personName, personAge, personGender, personFingerprint, socioeconomicRank, isAlive);
-//         bank = new Bank(bankName, bankFingerprint);
-//     }
+    void SetUp() override {
+        person = new Person(personName, personAge, personGender, personFingerprint, socioeconomicRank, isAlive);
+        bank = new Bank(bankName, bankFingerprint);
+    }
 
-//     void TearDown() override {
-//         delete person;
-//         delete bank;
-//     }
+    void TearDown() override {
+        delete person;
+        delete bank;
+    }
 
-//     // Utility function to create a valid Account for tests
-//     Account createValidAccount() {
-//         return Account(person, bank, accountPassword);
-//     }
-// };
+    // Utility function to create a valid Account for tests
+    Account createValidAccount() {
+        return Account(person, bank, accountPassword);
+    }
+};
 
-// TEST_F(AccountTest, Account_ConstructorAndOwnerGetter) {
-//     Account account = createValidAccount();
+TEST_F(AccountTest, Account_ConstructorAndOwnerGetter) {
+    Account account = createValidAccount();
 
-//     // Test owner getter
-//     EXPECT_EQ(account.get_owner(), person) << "Account owner does not match the expected person object.";
-// }
+    // Test owner getter
+    EXPECT_EQ(account.get_owner(), person) << "Account owner does not match the expected person object.";
+}
 
-// TEST_F(AccountTest, Account_GetBalanceInitialization) {
-//     Account account = createValidAccount();
+TEST_F(AccountTest, Account_GetBalanceInitialization) {
+    Account account = createValidAccount();
 
-//     // Test get_balance() initialization
-//     // Ensuring balance is zero-initialized as specified
-//     EXPECT_EQ(account.get_balance(), 0.0) << "Initial account balance is not correctly zero-initialized.";
-// }
+    // Test get_balance() initialization
+    // Ensuring balance is zero-initialized as specified
+    EXPECT_EQ(account.get_balance(), 0.0) << "Initial account balance is not correctly zero-initialized.";
+}
 
-// TEST_F(AccountTest, Account_GetStatusInitialization) {
-//     Account account = createValidAccount();
+TEST_F(AccountTest, Account_GetStatusInitialization) {
+    Account account = createValidAccount();
 
-//     // Test get_status() initialization
-//     // Assuming the initial account status should be true (active) as a clean and predictable starting state
-//     EXPECT_TRUE(account.get_status()) << "Initial account status is not true as expected for a clean starting state.";
-// }
+    // Test get_status() initialization
+    // Assuming the initial account status should be true (active) as a clean and predictable starting state
+    EXPECT_TRUE(account.get_status()) << "Initial account status is not true as expected for a clean starting state.";
+}
 
-// TEST_F(AccountTest, Account_AccountNumberFormatAndUniqueness) {
-//     Account account = createValidAccount();
+TEST_F(AccountTest, Account_AccountNumberFormatAndUniqueness) {
+    Account account = createValidAccount();
 
-//     // Test get_account_number() for format
-//     std::string accountNumber = account.get_account_number();
-//     EXPECT_EQ(accountNumber.length(), 16) << "Account number should be a 16-digit number.";
-//     EXPECT_TRUE(std::all_of(accountNumber.begin(), accountNumber.end(), ::isdigit)) << "Account number should only contain digits.";
+    // Test get_account_number() for format
+    std::string accountNumber = account.get_account_number();
+    EXPECT_EQ(accountNumber.length(), 16) << "Account number should be a 16-digit number.";
+    EXPECT_TRUE(std::all_of(accountNumber.begin(), accountNumber.end(), ::isdigit)) << "Account number should only contain digits.";
 
-//     // Generating another account to test uniqueness
-//     Account anotherAccount = createValidAccount();
-//     std::string anotherAccountNumber = anotherAccount.get_account_number();
-//     EXPECT_NE(accountNumber, anotherAccountNumber) << "Account numbers for different accounts must be unique.";
-// }
+    // Generating another account to test uniqueness
+    Account anotherAccount = createValidAccount();
+    std::string anotherAccountNumber = anotherAccount.get_account_number();
+    EXPECT_NE(accountNumber, anotherAccountNumber) << "Account numbers for different accounts must be unique.";
+}
 
-// TEST_F(AccountTest, Account_GetCVV2WithAuthentication) {
-//     Account account = createValidAccount();
-//     std::string correctFingerprint = personFingerprint;
-//     std::string incorrectFingerprint = "invalidFingerprint";
+TEST_F(AccountTest, Account_GetCVV2WithAuthentication) {
+    Account account = createValidAccount();
+    std::string correctFingerprint = personFingerprint;
+    std::string incorrectFingerprint = "invalidFingerprint";
 
-//     // Test access with correct fingerprint
-//     EXPECT_NO_THROW({
-//         std::string cvv2 = account.get_CVV2(correctFingerprint);
-//         EXPECT_EQ(cvv2.length(), 4) << "CVV2 should be a 4-digit number.";
-//         EXPECT_TRUE(std::all_of(cvv2.begin(), cvv2.end(), ::isdigit)) << "CVV2 should only contain digits.";
-//     });
+    // Test access with correct fingerprint
+    EXPECT_NO_THROW({
+        std::string cvv2 = account.get_CVV2(correctFingerprint);
+        EXPECT_EQ(cvv2.length(), 4) << "CVV2 should be a 4-digit number.";
+        EXPECT_TRUE(std::all_of(cvv2.begin(), cvv2.end(), ::isdigit)) << "CVV2 should only contain digits.";
+    });
 
-//     // Test access with incorrect fingerprint
-//     EXPECT_ANY_THROW({
-//         account.get_CVV2(incorrectFingerprint);
-//     }) << "Accessing CVV2 with an incorrect fingerprint should throw an error.";
-// }
+    // Test access with incorrect fingerprint
+    EXPECT_ANY_THROW({
+        account.get_CVV2(incorrectFingerprint);
+    }) << "Accessing CVV2 with an incorrect fingerprint should throw an error.";
+}
 
-// TEST_F(AccountTest, Account_GetPasswordWithAuthentication) {
-//     Account account = createValidAccount();
-//     std::string correctFingerprint = personFingerprint;
-//     std::string expectedPassword = accountPassword; // The password set in the constructor
-//     std::string incorrectFingerprint = "invalidFingerprint";
+TEST_F(AccountTest, Account_GetPasswordWithAuthentication) {
+    Account account = createValidAccount();
+    std::string correctFingerprint = personFingerprint;
+    std::string expectedPassword = accountPassword; // The password set in the constructor
+    std::string incorrectFingerprint = "invalidFingerprint";
 
-//     // Test access with correct fingerprint
-//     EXPECT_NO_THROW({
-//         std::string password = account.get_password(correctFingerprint);
-//         EXPECT_EQ(password, expectedPassword) << "Password does not match the expected value.";
-//     });
+    // Test access with correct fingerprint
+    EXPECT_NO_THROW({
+        std::string password = account.get_password(correctFingerprint);
+        EXPECT_EQ(password, expectedPassword) << "Password does not match the expected value.";
+    });
 
-//     // Test access with incorrect fingerprint
-//     EXPECT_ANY_THROW({
-//         account.get_password(incorrectFingerprint);
-//     }) << "Accessing password with an incorrect fingerprint should throw an error.";
-// }
+    // Test access with incorrect fingerprint
+    EXPECT_ANY_THROW({
+        account.get_password(incorrectFingerprint);
+    }) << "Accessing password with an incorrect fingerprint should throw an error.";
+}
 
-// TEST_F(AccountTest, Account_GetExpDateWithAuthentication) {
-//     Account account = createValidAccount();
-//     std::string correctFingerprint = personFingerprint;
-//     std::string incorrectFingerprint = "invalidFingerprint";
+TEST_F(AccountTest, Account_GetExpDateWithAuthentication) {
+    Account account = createValidAccount();
+    std::string correctFingerprint = personFingerprint;
+    std::string incorrectFingerprint = "invalidFingerprint";
 
-//     // Define the pattern for the expiration date "YY-MM"
-//     std::regex expDatePattern(R"(\d{2}-\d{2})"); // Regular expression for "YY-MM" pattern
+    // Define the pattern for the expiration date "YY-MM"
+    std::regex expDatePattern(R"(\d{2}-\d{2})"); // Regular expression for "YY-MM" pattern
 
-//     // Test access with correct fingerprint
-//     EXPECT_NO_THROW({
-//         std::string expDate = account.get_exp_date(correctFingerprint);
-//         bool matches = std::regex_match(expDate, expDatePattern);
-//         EXPECT_TRUE(matches) << "Expiration date " << expDate << " does not match the expected format 'YY-MM'.";
-//     });
+    // Test access with correct fingerprint
+    EXPECT_NO_THROW({
+        std::string expDate = account.get_exp_date(correctFingerprint);
+        bool matches = std::regex_match(expDate, expDatePattern);
+        EXPECT_TRUE(matches) << "Expiration date " << expDate << " does not match the expected format 'YY-MM'.";
+    });
 
-//     // Test access with incorrect fingerprint
-//     EXPECT_ANY_THROW({
-//         account.get_exp_date(incorrectFingerprint);
-//     }) << "Accessing expiration date with an incorrect fingerprint should throw an error.";
-// }
+    // Test access with incorrect fingerprint
+    EXPECT_ANY_THROW({
+        account.get_exp_date(incorrectFingerprint);
+    }) << "Accessing expiration date with an incorrect fingerprint should throw an error.";
+}
 
-// // "============================================="
-// // "               Bank Class Tests              "
-// // "============================================="
+// "============================================="
+// "               Bank Class Tests              "
+// "============================================="
 
 // class BankTest : public ::testing::Test {
 // protected:

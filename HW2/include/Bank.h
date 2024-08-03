@@ -21,13 +21,23 @@ public:
     // Bank operations
     Account* create_account(Person& owner, const std::string& owner_fingerprint, std::string password);
     bool delete_account(Account& account, const std::string& owner_fingerprint);
-    bool delete_customer(Person& owner, const std::string& owner_fingerprint);
+
+    // Financial operations
     bool deposit(Account& account, const std::string& owner_fingerprint, double amount);
     bool withdraw(Account& account, const std::string& owner_fingerprint, double amount);
+    // owner_fingerprint, CVV2, password, exp_date belongs to the source account
     bool transfer(Account& source, Account& destination, const std::string& owner_fingerprint,
                   const std::string& CVV2, const std::string& password, const std::string& exp_date, double amount);
     bool take_loan(Account& account, const std::string& owner_fingerprint, double amount);
     bool pay_loan(Account& account, double amount);
+    // Deleting Customers: Remove all information related to a person from the bank's records without "deleting the person.", Remember, deleting a customer's account doesn't mean we're deleting the person!
+
+    
+    bool delete_customer(Person& owner, const std::string& owner_fingerprint);
+
+
+    // Bank authentication
+    bool authenticate_bank(const std::string& bank_fingerprint);
 
     // Getters
     const std::string& get_bank_name() const;
@@ -58,7 +68,7 @@ private:
     const std::string bank_name;
     const size_t hashed_bank_fingerprint;
     std::vector<Person*> bank_customers;
-    std::vector<Account*> bank_accounts;
+    std::vector<Account*> bank_accounts; // if we can use Linked List to replace vector many operations could be more efficient
     std::map<Account*, Person*> account_2_customer;
     std::map<Person*, std::vector<Account*>> customer_2_accounts;
     std::map<Person*, double> customer_2_paid_loan;
