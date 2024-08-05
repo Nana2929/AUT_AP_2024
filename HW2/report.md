@@ -41,7 +41,7 @@ make
     };
 ```
 
-### Forwar Declaration
+### Forward Declaration
 - 先告訴編譯器有這樣一個類別存在（宣告），但是這個時候還先不告訴你他的實際內容（定義）；在這個狀況下，這個類別會是「incomplete type」，可以有限度地使用。
 - 若你要創造一個名為 B 的類別時，它有個成員為 A 類別的指標，這種情況我們通常會在 `B.h` 的上端寫一句 `#include "A.h"`一切運行如常。但當我們更動了 `A.h` 檔時，
  Compiler 在編譯的時後會重編所有 include `A.h` 的檔案，這當然包括 `Class B`，無謂的重編會浪費時間。
@@ -57,7 +57,7 @@ class Account {
 
 ```
 
-### Reference and Pointers
+### References and Pointers
 ```cpp
 Person&
 std::map<Person*, std::vector<Account*>> customer_2_accounts;
