@@ -5,8 +5,8 @@
 #include <regex>      // Include for std::regex
 #include <cmath>
 
-// #include "Account.h"
-// #include "Bank.h"
+#include "Account.h"
+#include "Bank.h"
 #include "Person.h"
 
 // "============================================="
@@ -310,463 +310,466 @@ TEST_F(AccountTest, Account_GetExpDateWithAuthentication) {
 // "               Bank Class Tests              "
 // "============================================="
 
-// class BankTest : public ::testing::Test {
-// protected:
-//     std::string validBankName = "Test Bank";
-//     std::string validBankFingerprint = "validBankFingerprint";
-
-//     // Utility function to hash a fingerprint string for comparison
-//     size_t hashFingerprint(const std::string& fingerprint) {
-//         return std::hash<std::string>{}(fingerprint);
-//     }
-
-//     // Create a Bank object for tests
-//     Bank createValidBank() {
-//         return Bank(validBankName, validBankFingerprint);
-//     }
-
-// 	// Additional setup for creating persons
-// 	Person* createValidPerson() {
-//     	std::string personName = "John Doe";
-//     	size_t personAge = 30;
-//     	std::string personGender = "Male";
-//     	std::string personFingerprint = "personFingerprint";
-//     	size_t socioeconomicRank = 6;
-//     	bool isAlive = true;
-//     	return new Person(personName, personAge, personGender, personFingerprint, socioeconomicRank, isAlive);
-// 	}
-
-// };
-
-// TEST_F(BankTest, Bank_ConstructorAndBasicGetters) {
-//     Bank bank = createValidBank();
-
-//     // Test Bank name is set correctly
-//     EXPECT_EQ(bank.get_bank_name(), validBankName) << "Bank name does not match the expected value.";
-
-//     // Test Bank fingerprint is hashed and stored securely
-//     size_t expectedHashedFingerprint = hashFingerprint(validBankFingerprint);
-//     EXPECT_EQ(bank.get_hashed_bank_fingerprint(), expectedHashedFingerprint) << "Bank fingerprint is not hashed or stored correctly.";
-
-//     // Test initial conditions of member variables for data integrity
-//     EXPECT_TRUE(bank.get_bank_customers(validBankFingerprint).empty()) << "Initial bank customers list is not empty.";
-//     EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Initial bank accounts list is not empty.";
-//     EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Initial bank total balance is not zero.";
-//     EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Initial bank total loan is not zero.";
-// }
-
-// TEST_F(BankTest, Bank_CreateAccountSuccess) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-
-//     // Verify the account is not null
-//     ASSERT_NE(account, nullptr) << "Failed to create an account.";
-
-//     // Verify the account's owner
-//     EXPECT_EQ(account->get_owner(), person) << "The account's owner is not set correctly.";
-
-//     // Verify the bank's internal data structures
-//     EXPECT_EQ(bank.get_bank_customers(validBankFingerprint).size(), 1) << "Bank's customer list should have one entry.";
-//     EXPECT_EQ(bank.get_bank_accounts(validBankFingerprint).size(), 1) << "Bank's accounts list should have one entry.";
-//     EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Bank's total balance should be zero after account creation.";
-
-//     // Clean up
-//     delete person; // Assuming Person needs to be manually managed
-// }
-
-// TEST_F(BankTest, Bank_CreateAccountIntegrityCheck) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     // This line is necessary to perform the action but the variable itself is not used afterward.
-//     // If the result of create_account is not used, you can simply call the method without assigning its result.
-//     bank.create_account(*person, ownerFingerprint, password);
-
-//     // Use find instead of operator[] for const map access
-//     auto& customerToAccountsMap = bank.get_customer_2_accounts_map(validBankFingerprint);
-//     auto it = customerToAccountsMap.find(person);
-//     ASSERT_NE(it, customerToAccountsMap.end()) << "New customer should exist in customer to accounts mapping.";
-//     EXPECT_EQ(it->second.size(), 1) << "New customer should have exactly one account.";
-
-//     // Clean up
-//     delete person; // Ensure resources are managed appropriately
-// }
-
-// TEST_F(BankTest, Bank_DeleteAccountSuccess) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
-
-//     // Attempt to delete the account with the correct fingerprint
-//     bool deletionResult = bank.delete_account(*account, ownerFingerprint);
-//     EXPECT_TRUE(deletionResult) << "Failed to delete account with correct fingerprint.";
-
-//     // Check integrity of bank's member variables after deletion
-//     EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's account list should be empty after deletion.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DeleteAccountIncorrectFingerprint) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string correctFingerprint = "personFingerprint";
-//     std::string incorrectFingerprint = "incorrectFingerprint";
-//     std::string password = "securePassword";
-
-//     Account* account = bank.create_account(*person, correctFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
-
-//     // Attempt to delete the account with an incorrect fingerprint
-//     EXPECT_ANY_THROW({bank.delete_account(*account, incorrectFingerprint);}) << "Account should not be deleted with incorrect fingerprint.";
-
-//     // Check that the account and customer still exist in bank's records
-//     EXPECT_FALSE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Account list should not be empty after failed deletion.";
-//     EXPECT_FALSE(bank.get_bank_customers(validBankFingerprint).empty()) << "Customer list should not be empty after failed deletion.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DeleteAccountIntegrityCheck) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     bank.delete_account(*account, ownerFingerprint);
-
-//     // Ensure the mappings are correctly updated after account deletion
-//     EXPECT_EQ(bank.get_account_2_customer_map(validBankFingerprint).size(), 0) << "Account to customer mapping should be empty after deletion.";
-//     EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Bank's total balance should remain unaffected by account deletion.";
-//     EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Bank's total loan should remain unaffected by account deletion.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DeleteAccountUnpaidLoanFailure) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     // Create an account and take a loan
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
-
-//     double accountBalance = 200000;
-//     bank.deposit(*account, ownerFingerprint, accountBalance);
-
-//     double loanAmount = 1000.0; // Specify the loan amount
-//     bool loanTaken = bank.take_loan(*account, ownerFingerprint, loanAmount);
-//     ASSERT_TRUE(loanTaken) << "Failed to take a loan, deletion test cannot proceed.";
-
-//     // Attempt to delete the account which has an unpaid loan
-//     EXPECT_ANY_THROW({bank.delete_account(*account, ownerFingerprint);}) << "Account with unpaid loan should not be deleted.";
-
-//     // Check integrity of bank's member variables after failed deletion
-//     auto& unpaidLoanMap = bank.get_customer_2_unpaid_loan_map(validBankFingerprint);
-//     EXPECT_FALSE(unpaidLoanMap.empty()) << "Unpaid loan map should not be empty after failed account deletion.";
-//     auto it = unpaidLoanMap.find(person);
-//     ASSERT_NE(it, unpaidLoanMap.end()) << "Person should exist in unpaid loan map after failed deletion.";
-
-//     // Ensure the account and customer still exist in bank's records
-//     EXPECT_FALSE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's accounts list should not be empty after failed deletion.";
-//     EXPECT_FALSE(bank.get_bank_customers(validBankFingerprint).empty()) << "Bank's customer list should not be empty after failed deletion.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DeleteCustomerSuccess) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     // Create an account for the person
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
-
-//     // Delete the customer
-//     bool deletionResult = bank.delete_customer(*person, ownerFingerprint);
-//     EXPECT_TRUE(deletionResult) << "Customer deletion failed when it should have succeeded.";
-
-//     // Verify no trace of the customer or their accounts in the bank's records
-//     EXPECT_TRUE(bank.get_bank_customers(validBankFingerprint).empty()) << "Bank's customer list should be empty after customer deletion.";
-//     EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's accounts list should be empty after customer deletion.";
-//     EXPECT_TRUE(bank.get_account_2_customer_map(validBankFingerprint).empty()) << "Account-to-customer mapping should be empty after customer deletion.";
-//     EXPECT_TRUE(bank.get_customer_2_accounts_map(validBankFingerprint).empty()) << "Customer-to-accounts mapping should be empty after customer deletion.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DeleteCustomerUnpaidLoanFailure) {
-//     // Setup: Create a bank, a person, and an account, and then take a loan
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed; deletion test cannot proceed.";
-
-//     double accountBalance = 200000;
-//     bank.deposit(*account, ownerFingerprint, accountBalance);
-
-//     double loanAmount = 1000.0;  // Specify the loan amount
-//     bool loanTaken = bank.take_loan(*account, ownerFingerprint, loanAmount);
-//     ASSERT_TRUE(loanTaken) << "Failed to take a loan; deletion test cannot proceed.";
-
-//     // Attempt to delete the customer with an unpaid loan
-//     EXPECT_ANY_THROW({bank.delete_customer(*person, ownerFingerprint);}) << "Customer with unpaid loan should not be deleted.";
-
-//     // Verify the customer still exists in the bank's records
-//     auto& customers = bank.get_bank_customers(validBankFingerprint);
-//     bool customerExists = std::any_of(customers.begin(), customers.end(), [person](const Person* p) {
-//         return p == person;
-//     });
-//     EXPECT_TRUE(customerExists) << "Customer should still exist in the bank's records after failed deletion attempt.";
-
-//     // Verify the customer's account still exists in the bank's records
-//     auto& accounts = bank.get_bank_accounts(validBankFingerprint);
-//     bool accountExists = std::any_of(accounts.begin(), accounts.end(), [account](const Account* acc) {
-//         return acc == account;
-//     });
-//     EXPECT_TRUE(accountExists) << "Customer's account should still exist in the bank's records after failed deletion attempt.";
-
-//     // Verify the unpaid loan record still exists for the customer
-//     auto& unpaidLoans = bank.get_customer_2_unpaid_loan_map(validBankFingerprint);
-//     auto loanIt = unpaidLoans.find(person);
-//     EXPECT_NE(loanIt, unpaidLoans.end()) << "Unpaid loan record should still exist for the customer.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_DepositSuccessAndIntegrityCheck) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     std::string password = "securePassword";
-//     double initialDepositAmount = 1000.0;
-
-//     // Create an account for the person
-//     Account* account = bank.create_account(*person, ownerFingerprint, password);
-//     ASSERT_NE(account, nullptr) << "Account creation failed, deposit test cannot proceed.";
-
-//     // Simulate a successful deposit
-//     bool depositResult = bank.deposit(*account, ownerFingerprint, initialDepositAmount);
-//     EXPECT_TRUE(depositResult) << "Deposit operation should succeed.";
-
-//     // Verify account balance is updated correctly
-//     EXPECT_EQ(account->get_balance(), initialDepositAmount) << "Account balance does not match expected after deposit.";
-
-//     EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0) << "Bank total balance does not reflect deposit correctly. Bank balance is the interest profit from loans, not sum of Accounts balance.";
-
-//     // Verify that no unauthorized changes to loans or accounts occurred
-//     EXPECT_TRUE(bank.get_customer_2_unpaid_loan_map(validBankFingerprint).empty()) << "Unpaid loan map should remain unaffected by deposit.";
-//     EXPECT_TRUE(bank.get_customer_2_paid_loan_map(validBankFingerprint).empty()) << "Paid loan map should remain unaffected by deposit.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_WithdrawSuccess) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     double depositAmount = 1000.0;
-//     double withdrawAmount = 500.0;
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-//     ASSERT_TRUE(bank.deposit(*account, ownerFingerprint, depositAmount)) << "Deposit before withdrawal failed.";
-
-//     // Attempt to withdraw
-//     EXPECT_TRUE(bank.withdraw(*account, ownerFingerprint, withdrawAmount)) << "Withdrawal operation should succeed.";
-
-//     // Verify account balance after withdrawal
-//     EXPECT_EQ(account->get_balance(), depositAmount - withdrawAmount) << "Account balance after withdrawal does not match expected.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_WithdrawIncorrectFingerprintFailure) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-
-//     std::string incorrectFingerprint = "incorrectFingerprint";
-//     double depositAmount = 1000.0;
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-//     bank.deposit(*account, ownerFingerprint, depositAmount);
-
-//     // Attempt to withdraw with incorrect fingerprint
-//     EXPECT_ANY_THROW({bank.withdraw(*account, incorrectFingerprint, 500.0);}) << "Withdrawal with incorrect fingerprint should fail.";
-
-//     // Verify account balance remains unchanged
-//     EXPECT_EQ(account->get_balance(), depositAmount) << "Account balance should remain unchanged after failed withdrawal attempt.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_WithdrawExceedingBalanceFailure) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-
-//     double depositAmount = 500.0; // Less than withdrawal amount
-//     double withdrawAmount = 1000.0;
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-//     bank.deposit(*account, ownerFingerprint, depositAmount);
-
-//     // Attempt to withdraw more than the account balance
-//     EXPECT_ANY_THROW({bank.withdraw(*account, ownerFingerprint, withdrawAmount);}) << "Withdrawal exceeding account balance should fail.";
-
-//     // Verify account balance remains unchanged
-//     EXPECT_EQ(account->get_balance(), depositAmount) << "Account balance should remain unchanged after failed withdrawal attempt.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_TransferSuccess) {
-//     Bank bank = createValidBank();
-//     std::string password = "securePassword";
-
-//     std::string name1 = "Alice";
-//     size_t age1 = 30;
-//     std::string gender1 = "Female";
-//     std::string fingerprint1 = "fingerprint1";
-//     size_t socioeconomicRank1 = 5;
-//     bool isAlive1 = true;
-
-//     std::string name2 = "Bob";
-//     size_t age2 = 25;
-//     std::string gender2 = "Male";
-//     std::string fingerprint2 = "fingerprint2";
-//     size_t socioeconomicRank2 = 7;
-//     bool isAlive2 = false;
-
-//     Person sourcePerson(name1, age1, gender1, fingerprint1, socioeconomicRank1, isAlive1);
-//     Person destinationPerson(name2, age2, gender2, fingerprint2, socioeconomicRank2, isAlive2);
-
-//     double initialAmount = 1000.0;
-//     double transferAmount = 500.0;
-
-//     Account* sourceAccount = bank.create_account(sourcePerson, fingerprint1, password);
-//     Account* destinationAccount = bank.create_account(destinationPerson, fingerprint2, password);
-//     bank.deposit(*sourceAccount, fingerprint1, initialAmount); // Ensure source account has funds
-
-//     std::string CVV2 = sourceAccount->get_CVV2(fingerprint1);
-//     std::string expDate = sourceAccount->get_exp_date(fingerprint1);
-
-//     // Attempt to transfer
-//     bool transferResult = bank.transfer(*sourceAccount, *destinationAccount, fingerprint1, CVV2, password, expDate, transferAmount);
-//     EXPECT_TRUE(transferResult) << "Transfer operation should succeed.";
-
-//     // Verify balances after transfer
-//     EXPECT_EQ(sourceAccount->get_balance(), initialAmount - transferAmount) << "Source account balance after transfer does not match expected.";
-//     EXPECT_EQ(destinationAccount->get_balance(), transferAmount) << "Destination account balance after transfer does not match expected.";
-
-// }
-
-// TEST_F(BankTest, Bank_TakeLoanSuccess) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson(); // Assume person's socioeconomic rank is set within this function
-//     std::string ownerFingerprint = "personFingerprint";
-//     double requestedLoanAmount = 5000.0; // Requested loan amount within the eligibility limit
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-
-//     double accountBalance = 200000;
-//     bank.deposit(*account, ownerFingerprint, accountBalance);
-
-//     // Attempt to take a loan
-//     bool loanResult = bank.take_loan(*account, ownerFingerprint, requestedLoanAmount);
-//     EXPECT_TRUE(loanResult) << "Loan operation should succeed.";
-
-//     // Assume person's socioeconomic rank is 5 for this example
-//     int personRank = person->get_socioeconomic_rank();
-//     double interestRate = 10.0 / personRank; // Calculating interest as (10/rank) percent
-//     double expectedLoanAmountWithInterest = requestedLoanAmount * (1 + interestRate / 100.0);
-
-//     double actualLoanAmountWithInterest = bank.get_customer_2_unpaid_loan_map(validBankFingerprint).at(person);
-//     EXPECT_NEAR(actualLoanAmountWithInterest, expectedLoanAmountWithInterest, 0.01) << "Loan amount with interest does not match expected.";
-
-//     // Verify bank's total loan is updated correctly
-//     EXPECT_NEAR(bank.get_bank_total_loan(validBankFingerprint), expectedLoanAmountWithInterest, 0.01) << "Bank's total loan amount does not reflect the newly granted loan. bank total loan is the sum of all unpaid loans.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_TakeLoanInsufficientEligibilityFailure) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson(); // this function initializes the person with a certain socioeconomic of 6
-//     std::string ownerFingerprint = "personFingerprint";
-//     double accountBalance = 10000.0; // Initial account balance, assume deposit operation is successful and doesn't need explicit verification here
-//     double requestedLoanAmount = 8000.0; // Requested loan amount exceeds the 60% eligibility for rank 6 (6000.0 would be the limit)
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-//     bank.deposit(*account, ownerFingerprint, accountBalance); // Ensure the account has initial balance
-
-//     // Attempt to take a loan exceeding the eligibility
-//     EXPECT_ANY_THROW({bank.take_loan(*account, ownerFingerprint, requestedLoanAmount);}) << "Loan operation should fail due to insufficient eligibility.";
-
-//     // Verify no loan amount is added to the bank's or customer's loan records
-//     EXPECT_TRUE(bank.get_customer_2_unpaid_loan_map(validBankFingerprint).find(person) == bank.get_customer_2_unpaid_loan_map(validBankFingerprint).end()) << "No loan record should exist for the customer after failed loan attempt.";
-//     EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Bank's total loan amount should remain unchanged after failed loan attempt.";
-
-//     // Clean up
-//     delete person;
-// }
-
-// TEST_F(BankTest, Bank_PayLoanSuccessAndRankUpgrade) {
-//     Bank bank = createValidBank();
-//     Person* person = createValidPerson();
-//     std::string ownerFingerprint = "personFingerprint";
-//     double accountBalance = 20000000; // Set a high initial account balance to facilitate multiple loans
-
-//     Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
-//     bank.deposit(*account, ownerFingerprint, accountBalance); // Deposit a large sum to cover loan amounts
-
-//     // Loop to simulate taking and repaying loans until the socioeconomic rank is upgraded
-//     for (size_t i = 0; i < 11; ++i) { // Arbitrary loop limit to prevent infinite loop in case of an error
-//         size_t currentRank = person->get_socioeconomic_rank();
-//         double loanAmount = 100000;
-
-//         double interestRate = 10.0 / currentRank; // Interest calculation
-//         double repaymentAmount = loanAmount * (1 + interestRate / 100.0); // Include interest in repayment
-
-//         bool loanResult = bank.take_loan(*account, ownerFingerprint, loanAmount);
-//         EXPECT_TRUE(loanResult) << "Taking loan operation should succeed.";
-
-//         bool paymentResult = bank.pay_loan(*account, repaymentAmount);
-//         EXPECT_TRUE(paymentResult) << "Loan payment operation should succeed.";
-//     }
-
-//     // Verify rank has been upgraded
-//     EXPECT_EQ(person->get_socioeconomic_rank(), 7) << "Person's socioeconomic rank should be upgraded after repaying loans.";
-
-//     // Clean up
-//     delete person;
-// }
+class BankTest : public ::testing::Test {
+protected:
+    std::string validBankName = "Test Bank";
+    std::string validBankFingerprint = "validBankFingerprint";
+
+    // Utility function to hash a fingerprint string for comparison
+    size_t hashFingerprint(const std::string& fingerprint) {
+        return std::hash<std::string>{}(fingerprint);
+    }
+
+    // Create a Bank object for tests
+    Bank createValidBank() {
+        return Bank(validBankName, validBankFingerprint);
+    }
+
+	// Additional setup for creating persons
+	Person* createValidPerson() {
+    	std::string personName = "John Doe";
+    	size_t personAge = 30;
+    	std::string personGender = "Male";
+    	std::string personFingerprint = "personFingerprint";
+    	size_t socioeconomicRank = 6;
+    	bool isAlive = true;
+    	return new Person(personName, personAge, personGender, personFingerprint, socioeconomicRank, isAlive);
+	}
+
+};
+
+TEST_F(BankTest, Bank_ConstructorAndBasicGetters) {
+    Bank bank = createValidBank();
+
+    // Test Bank name is set correctly
+    EXPECT_EQ(bank.get_bank_name(), validBankName) << "Bank name does not match the expected value.";
+
+    // Test Bank fingerprint is hashed and stored securely
+    size_t expectedHashedFingerprint = hashFingerprint(validBankFingerprint);
+    EXPECT_EQ(bank.get_hashed_bank_fingerprint(), expectedHashedFingerprint) << "Bank fingerprint is not hashed or stored correctly.";
+
+    // Test initial conditions of member variables for data integrity
+    EXPECT_TRUE(bank.get_bank_customers(validBankFingerprint).empty()) << "Initial bank customers list is not empty.";
+    EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Initial bank accounts list is not empty.";
+    EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Initial bank total balance is not zero.";
+    EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Initial bank total loan is not zero.";
+}
+
+TEST_F(BankTest, Bank_CreateAccountSuccess) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+
+    // Verify the account is not null
+    ASSERT_NE(account, nullptr) << "Failed to create an account.";
+
+    // Verify the account's owner
+    EXPECT_EQ(account->get_owner(), person) << "The account's owner is not set correctly.";
+
+    // Verify the bank's internal data structures
+    EXPECT_EQ(bank.get_bank_customers(validBankFingerprint).size(), 1) << "Bank's customer list should have one entry.";
+    EXPECT_EQ(bank.get_bank_accounts(validBankFingerprint).size(), 1) << "Bank's accounts list should have one entry.";
+    EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Bank's total balance should be zero after account creation.";
+
+    // Clean up
+    delete person; // Assuming Person needs to be manually managed
+}
+
+TEST_F(BankTest, Bank_CreateAccountIntegrityCheck) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    // This line is necessary to perform the action but the variable itself is not used afterward.
+    // If the result of create_account is not used, you can simply call the method without assigning its result.
+    bank.create_account(*person, ownerFingerprint, password);
+
+    // Use find instead of operator[] for const map access
+    auto& customerToAccountsMap = bank.get_customer_2_accounts_map(validBankFingerprint);
+    auto it = customerToAccountsMap.find(person);
+    ASSERT_NE(it, customerToAccountsMap.end()) << "New customer should exist in customer to accounts mapping.";
+    EXPECT_EQ(it->second.size(), 1) << "New customer should have exactly one account.";
+
+    // Clean up
+    delete person; // Ensure resources are managed appropriately
+}
+
+TEST_F(BankTest, Bank_DeleteAccountSuccess) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
+
+    // Attempt to delete the account with the correct fingerprint
+    bool deletionResult = bank.delete_account(*account, ownerFingerprint);
+    EXPECT_TRUE(deletionResult) << "Failed to delete account with correct fingerprint.";
+
+    // Check integrity of bank's member variables after deletion
+    EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's account list should be empty after deletion.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DeleteAccountIncorrectFingerprint) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string correctFingerprint = "personFingerprint";
+    std::string incorrectFingerprint = "incorrectFingerprint";
+    std::string password = "securePassword";
+
+    Account* account = bank.create_account(*person, correctFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
+
+    // Attempt to delete the account with an incorrect fingerprint
+    EXPECT_ANY_THROW({bank.delete_account(*account, incorrectFingerprint);}) << "Account should not be deleted with incorrect fingerprint.";
+
+    // Check that the account and customer still exist in bank's records
+    EXPECT_FALSE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Account list should not be empty after failed deletion.";
+    EXPECT_FALSE(bank.get_bank_customers(validBankFingerprint).empty()) << "Customer list should not be empty after failed deletion.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DeleteAccountIntegrityCheck) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    bank.delete_account(*account, ownerFingerprint);
+
+    // Ensure the mappings are correctly updated after account deletion
+    EXPECT_EQ(bank.get_account_2_customer_map(validBankFingerprint).size(), 0) << "Account to customer mapping should be empty after deletion.";
+    EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0.0) << "Bank's total balance should remain unaffected by account deletion.";
+    EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Bank's total loan should remain unaffected by account deletion.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DeleteAccountUnpaidLoanFailure) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    // Create an account and take a loan
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
+
+    double accountBalance = 200000;
+    bank.deposit(*account, ownerFingerprint, accountBalance);
+
+    double loanAmount = 1000.0; // Specify the loan amount
+    bool loanTaken = bank.take_loan(*account, ownerFingerprint, loanAmount);
+    ASSERT_TRUE(loanTaken) << "Failed to take a loan, deletion test cannot proceed.";
+
+    // Attempt to delete the account which has an unpaid loan
+    EXPECT_ANY_THROW({bank.delete_account(*account, ownerFingerprint);}) << "Account with unpaid loan should not be deleted.";
+
+    // Check integrity of bank's member variables after failed deletion
+    auto& unpaidLoanMap = bank.get_customer_2_unpaid_loan_map(validBankFingerprint);
+    EXPECT_FALSE(unpaidLoanMap.empty()) << "Unpaid loan map should not be empty after failed account deletion.";
+    auto it = unpaidLoanMap.find(person);
+    ASSERT_NE(it, unpaidLoanMap.end()) << "Person should exist in unpaid loan map after failed deletion.";
+
+    // Ensure the account and customer still exist in bank's records
+    EXPECT_FALSE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's accounts list should not be empty after failed deletion.";
+    EXPECT_FALSE(bank.get_bank_customers(validBankFingerprint).empty()) << "Bank's customer list should not be empty after failed deletion.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DeleteCustomerSuccess) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    // Create an account for the person
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed, deletion test cannot proceed.";
+
+    // Delete the customer
+    bool deletionResult = bank.delete_customer(*person, ownerFingerprint);
+    EXPECT_TRUE(deletionResult) << "Customer deletion failed when it should have succeeded.";
+
+    // Verify no trace of the customer or their accounts in the bank's records
+    EXPECT_TRUE(bank.get_bank_customers(validBankFingerprint).empty()) << "Bank's customer list should be empty after customer deletion.";
+    EXPECT_TRUE(bank.get_bank_accounts(validBankFingerprint).empty()) << "Bank's accounts list should be empty after customer deletion.";
+    EXPECT_TRUE(bank.get_account_2_customer_map(validBankFingerprint).empty()) << "Account-to-customer mapping should be empty after customer deletion.";
+    EXPECT_TRUE(bank.get_customer_2_accounts_map(validBankFingerprint).empty()) << "Customer-to-accounts mapping should be empty after customer deletion.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DeleteCustomerUnpaidLoanFailure) {
+    // Setup: Create a bank, a person, and an account, and then take a loan
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed; deletion test cannot proceed.";
+
+    double accountBalance = 200000;
+    bank.deposit(*account, ownerFingerprint, accountBalance);
+
+    double loanAmount = 1000.0;  // Specify the loan amount
+    bool loanTaken = bank.take_loan(*account, ownerFingerprint, loanAmount);
+    ASSERT_TRUE(loanTaken) << "Failed to take a loan; deletion test cannot proceed.";
+
+    // Attempt to delete the customer with an unpaid loan
+    EXPECT_ANY_THROW({bank.delete_customer(*person, ownerFingerprint);}) << "Customer with unpaid loan should not be deleted.";
+
+    // Verify the customer still exists in the bank's records
+    auto& customers = bank.get_bank_customers(validBankFingerprint);
+    bool customerExists = std::any_of(customers.begin(), customers.end(), [person](const Person* p) {
+        return p == person;
+    });
+    EXPECT_TRUE(customerExists) << "Customer should still exist in the bank's records after failed deletion attempt.";
+
+    // Verify the customer's account still exists in the bank's records
+    auto& accounts = bank.get_bank_accounts(validBankFingerprint);
+    bool accountExists = std::any_of(accounts.begin(), accounts.end(), [account](const Account* acc) {
+        return acc == account;
+    });
+    EXPECT_TRUE(accountExists) << "Customer's account should still exist in the bank's records after failed deletion attempt.";
+
+    // Verify the unpaid loan record still exists for the customer
+    auto& unpaidLoans = bank.get_customer_2_unpaid_loan_map(validBankFingerprint);
+    auto loanIt = unpaidLoans.find(person);
+    EXPECT_NE(loanIt, unpaidLoans.end()) << "Unpaid loan record should still exist for the customer.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_DepositSuccessAndIntegrityCheck) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    std::string password = "securePassword";
+    double initialDepositAmount = 1000.0;
+
+    // Create an account for the person
+    Account* account = bank.create_account(*person, ownerFingerprint, password);
+    ASSERT_NE(account, nullptr) << "Account creation failed, deposit test cannot proceed.";
+
+    // Simulate a successful deposit
+    bool depositResult = bank.deposit(*account, ownerFingerprint, initialDepositAmount);
+    EXPECT_TRUE(depositResult) << "Deposit operation should succeed.";
+
+    // Verify account balance is updated correctly
+    EXPECT_EQ(account->get_balance(), initialDepositAmount) << "Account balance does not match expected after deposit.";
+
+    EXPECT_EQ(bank.get_bank_total_balance(validBankFingerprint), 0) << "Bank total balance does not reflect deposit correctly. Bank balance is the interest profit from loans, not sum of Accounts balance.";
+
+    // Verify that no unauthorized changes to loans or accounts occurred
+    EXPECT_TRUE(bank.get_customer_2_unpaid_loan_map(validBankFingerprint).empty()) << "Unpaid loan map should remain unaffected by deposit.";
+    EXPECT_TRUE(bank.get_customer_2_paid_loan_map(validBankFingerprint).empty()) << "Paid loan map should remain unaffected by deposit.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_WithdrawSuccess) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    double depositAmount = 1000.0;
+    double withdrawAmount = 500.0;
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+    ASSERT_TRUE(bank.deposit(*account, ownerFingerprint, depositAmount)) << "Deposit before withdrawal failed.";
+
+    // Attempt to withdraw
+    EXPECT_TRUE(bank.withdraw(*account, ownerFingerprint, withdrawAmount)) << "Withdrawal operation should succeed.";
+
+    // Verify account balance after withdrawal
+    EXPECT_EQ(account->get_balance(), depositAmount - withdrawAmount) << "Account balance after withdrawal does not match expected.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_WithdrawIncorrectFingerprintFailure) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+
+    std::string incorrectFingerprint = "incorrectFingerprint";
+    double depositAmount = 1000.0;
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+    bank.deposit(*account, ownerFingerprint, depositAmount);
+
+    // Attempt to withdraw with incorrect fingerprint
+    EXPECT_ANY_THROW({bank.withdraw(*account, incorrectFingerprint, 500.0);}) << "Withdrawal with incorrect fingerprint should fail.";
+
+    // Verify account balance remains unchanged
+    EXPECT_EQ(account->get_balance(), depositAmount) << "Account balance should remain unchanged after failed withdrawal attempt.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_WithdrawExceedingBalanceFailure) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+
+    double depositAmount = 500.0; // Less than withdrawal amount
+    double withdrawAmount = 1000.0;
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+    bank.deposit(*account, ownerFingerprint, depositAmount);
+
+    // Attempt to withdraw more than the account balance
+    EXPECT_ANY_THROW({bank.withdraw(*account, ownerFingerprint, withdrawAmount);}) << "Withdrawal exceeding account balance should fail.";
+
+    // Verify account balance remains unchanged
+    EXPECT_EQ(account->get_balance(), depositAmount) << "Account balance should remain unchanged after failed withdrawal attempt.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_TransferSuccess) {
+    Bank bank = createValidBank();
+    std::string password = "securePassword";
+
+    std::string name1 = "Alice";
+    size_t age1 = 30;
+    std::string gender1 = "Female";
+    std::string fingerprint1 = "fingerprint1";
+    size_t socioeconomicRank1 = 5;
+    bool isAlive1 = true;
+
+    std::string name2 = "Bob";
+    size_t age2 = 25;
+    std::string gender2 = "Male";
+    std::string fingerprint2 = "fingerprint2";
+    size_t socioeconomicRank2 = 7;
+    bool isAlive2 = false;
+
+    Person sourcePerson(name1, age1, gender1, fingerprint1, socioeconomicRank1, isAlive1);
+    Person destinationPerson(name2, age2, gender2, fingerprint2, socioeconomicRank2, isAlive2);
+
+    double initialAmount = 1000.0;
+    double transferAmount = 500.0;
+
+    Account* sourceAccount = bank.create_account(sourcePerson, fingerprint1, password);
+    std::cout << "sourceAccount created" << std::endl;
+    Account* destinationAccount = bank.create_account(destinationPerson, fingerprint2, password);
+    std::cout << "destinationAccount created" << std::endl;
+    bank.deposit(*sourceAccount, fingerprint1, initialAmount); // Ensure source account has funds
+    std::cout << "sourceAccount deposited" << std::endl;
+    std::string CVV2 = sourceAccount->get_CVV2(fingerprint1);
+    std::string expDate = sourceAccount->get_exp_date(fingerprint1);
+
+
+    // Attempt to transfer
+    bool transferResult = bank.transfer(*sourceAccount, *destinationAccount, fingerprint1, CVV2, password, expDate, transferAmount);
+    EXPECT_TRUE(transferResult) << "Transfer operation should succeed.";
+
+    // Verify balances after transfer
+    EXPECT_EQ(sourceAccount->get_balance(), initialAmount - transferAmount) << "Source account balance after transfer does not match expected.";
+    EXPECT_EQ(destinationAccount->get_balance(), transferAmount) << "Destination account balance after transfer does not match expected.";
+
+}
+
+TEST_F(BankTest, Bank_TakeLoanSuccess) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson(); // Assume person's socioeconomic rank is set within this function
+    std::string ownerFingerprint = "personFingerprint";
+    double requestedLoanAmount = 5000.0; // Requested loan amount within the eligibility limit
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+
+    double accountBalance = 200000;
+    bank.deposit(*account, ownerFingerprint, accountBalance);
+
+    // Attempt to take a loan
+    bool loanResult = bank.take_loan(*account, ownerFingerprint, requestedLoanAmount);
+    EXPECT_TRUE(loanResult) << "Loan operation should succeed.";
+
+    // Assume person's socioeconomic rank is 5 for this example
+    int personRank = person->get_socioeconomic_rank();
+    double interestRate = 10.0 / personRank; // Calculating interest as (10/rank) percent
+    double expectedLoanAmountWithInterest = requestedLoanAmount * (1 + interestRate / 100.0);
+
+    double actualLoanAmountWithInterest = bank.get_customer_2_unpaid_loan_map(validBankFingerprint).at(person);
+    EXPECT_NEAR(actualLoanAmountWithInterest, expectedLoanAmountWithInterest, 0.01) << "Loan amount with interest does not match expected.";
+
+    // Verify bank's total loan is updated correctly
+    EXPECT_NEAR(bank.get_bank_total_loan(validBankFingerprint), expectedLoanAmountWithInterest, 0.01) << "Bank's total loan amount does not reflect the newly granted loan. bank total loan is the sum of all unpaid loans.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_TakeLoanInsufficientEligibilityFailure) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson(); // this function initializes the person with a certain socioeconomic of 6
+    std::string ownerFingerprint = "personFingerprint";
+    double accountBalance = 10000.0; // Initial account balance, assume deposit operation is successful and doesn't need explicit verification here
+    double requestedLoanAmount = 8000.0; // Requested loan amount exceeds the 60% eligibility for rank 6 (6000.0 would be the limit)
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+    bank.deposit(*account, ownerFingerprint, accountBalance); // Ensure the account has initial balance
+
+    // Attempt to take a loan exceeding the eligibility
+    EXPECT_ANY_THROW({bank.take_loan(*account, ownerFingerprint, requestedLoanAmount);}) << "Loan operation should fail due to insufficient eligibility.";
+
+    // Verify no loan amount is added to the bank's or customer's loan records
+    EXPECT_TRUE(bank.get_customer_2_unpaid_loan_map(validBankFingerprint).find(person) == bank.get_customer_2_unpaid_loan_map(validBankFingerprint).end()) << "No loan record should exist for the customer after failed loan attempt.";
+    EXPECT_EQ(bank.get_bank_total_loan(validBankFingerprint), 0.0) << "Bank's total loan amount should remain unchanged after failed loan attempt.";
+
+    // Clean up
+    delete person;
+}
+
+TEST_F(BankTest, Bank_PayLoanSuccessAndRankUpgrade) {
+    Bank bank = createValidBank();
+    Person* person = createValidPerson();
+    std::string ownerFingerprint = "personFingerprint";
+    double accountBalance = 20000000; // Set a high initial account balance to facilitate multiple loans
+
+    Account* account = bank.create_account(*person, ownerFingerprint, "securePassword");
+    bank.deposit(*account, ownerFingerprint, accountBalance); // Deposit a large sum to cover loan amounts
+
+    // Loop to simulate taking and repaying loans until the socioeconomic rank is upgraded
+    for (size_t i = 0; i < 11; ++i) { // Arbitrary loop limit to prevent infinite loop in case of an error
+        size_t currentRank = person->get_socioeconomic_rank();
+        double loanAmount = 100000;
+
+        double interestRate = 10.0 / currentRank; // Interest calculation
+        double repaymentAmount = loanAmount * (1 + interestRate / 100.0); // Include interest in repayment
+
+        bool loanResult = bank.take_loan(*account, ownerFingerprint, loanAmount);
+        EXPECT_TRUE(loanResult) << "Taking loan operation should succeed.";
+
+        bool paymentResult = bank.pay_loan(*account, repaymentAmount);
+        EXPECT_TRUE(paymentResult) << "Loan payment operation should succeed.";
+    }
+
+    // Verify rank has been upgraded
+    EXPECT_EQ(person->get_socioeconomic_rank(), 7) << "Person's socioeconomic rank should be upgraded after repaying loans.";
+
+    // Clean up
+    delete person;
+}
