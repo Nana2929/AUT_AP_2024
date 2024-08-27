@@ -1,10 +1,14 @@
-# build 
+# build
 build
+out
 # settings (env)
 *.vscode
 bash
 ## Prerequisites
 *.ld
+## archives
+archive
+HW2/SHA256*
 
 # Compiled Object files
 *.slo
@@ -35,3 +39,4 @@ bash
 *.exe
 *.out
 *.app
+HW2/test.sh
