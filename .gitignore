@@ -40,3 +40,4 @@ HW2/SHA256*
 *.out
 *.app
 HW2/test.sh
+HW4/test.cpp
